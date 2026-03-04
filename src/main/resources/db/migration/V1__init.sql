@@ -1,5 +1,5 @@
 CREATE TABLE applications (
-                              id UUID PRIMARY KEY,
+                              id BIGSERIAL PRIMARY KEY,
                               company VARCHAR(120) NOT NULL,
                               role_title VARCHAR(160) NOT NULL,
                               location VARCHAR(160),
