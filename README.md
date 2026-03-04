@@ -129,6 +129,7 @@ Authentication
 Docker support
 API documentation
 Integration tests
+Frountend interface
 ```
 
 ---
