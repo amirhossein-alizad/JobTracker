@@ -55,7 +55,7 @@ dto → request and response objects
 
 ### Clone the repository
 
-git clone https://github.com/yourusername/job-tracker.git
+git clone https://github.com/amirhossein-alizad/job-tracker.git
 
 cd job-tracker
 
