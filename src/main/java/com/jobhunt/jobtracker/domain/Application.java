@@ -1,5 +1,6 @@
 package com.jobhunt.jobtracker.domain;
 
+import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,4 +64,22 @@ public class Application {
     void preUpdate() {
         updatedAt = Instant.now();
     }
+
+    public void update(UpdateApplicationRequest req) {
+        if (!req.getLocation().isBlank())
+            this.location = req.getLocation();
+        if (!req.getJobUrl().isBlank())
+            this.jobUrl = req.getJobUrl();
+        if (req.getStatus() != null)
+            this.status = req.getStatus();
+        if (req.getSalaryMin() != null)
+            this.salaryMin = req.getSalaryMin();
+        if (req.getSalaryMax() != null)
+            this.salaryMax = req.getSalaryMax();
+        if (!req.getRoleTitle().isBlank())
+            this.roleTitle = req.getRoleTitle();
+        if (!req.getSource().isBlank())
+            this.source = req.getSource();
+    }
+
 }

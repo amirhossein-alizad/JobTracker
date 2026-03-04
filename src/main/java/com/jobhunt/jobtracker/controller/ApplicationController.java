@@ -4,6 +4,8 @@ import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
 import com.jobhunt.jobtracker.dto.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
+import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
+import com.jobhunt.jobtracker.exception.NotFoundException;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
 import com.jobhunt.jobtracker.repository.ApplicationSpecification;
 import jakarta.validation.Valid;
@@ -47,7 +49,7 @@ public class ApplicationController {
     public ApplicationResponse get(@PathVariable Long id) {
         return repository.findById(id)
                 .map(this::toResponse)
-                .orElseThrow(() -> new IllegalArgumentException("Application not found: " + id));
+                .orElseThrow(() -> new NotFoundException("Application not found: " + id));
     }
 
     @GetMapping
@@ -77,6 +79,14 @@ public class ApplicationController {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @PatchMapping("/{id}")
+    public ApplicationResponse update(@RequestBody UpdateApplicationRequest req, @PathVariable Long id) {
+        Application application = repository.findById(id).orElseThrow(() -> new NotFoundException("Application not found: " + id));
+        application.update(req);
+        Application saved = repository.save(application);
+        return toResponse(saved);
     }
 
     private ApplicationResponse toResponse(Application e) {
