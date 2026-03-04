@@ -9,8 +9,8 @@ CREATE TABLE applications (
                               job_url TEXT,
                               salary_min INTEGER,
                               salary_max INTEGER,
-                              created_at TIMESTAMPTZ NOT NULL,
-                              updated_at TIMESTAMPTZ NOT NULL
+                              created_at TIMESTAMP NOT NULL,
+                              updated_at TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_applications_status ON applications(status);
