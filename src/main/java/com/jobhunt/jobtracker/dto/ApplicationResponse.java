@@ -5,11 +5,10 @@ import lombok.Getter;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 public class ApplicationResponse {
-    private UUID id;
+    private Long id;
     private String company;
     private String roleTitle;
     private String location;
@@ -22,7 +21,7 @@ public class ApplicationResponse {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public ApplicationResponse(UUID id, String company, String roleTitle, String location, Status status,
+    public ApplicationResponse(Long id, String company, String roleTitle, String location, Status status,
                                String source, LocalDate appliedDate, String jobUrl, Integer salaryMin, Integer salaryMax,
                                Instant createdAt, Instant updatedAt) {
         this.id = id;

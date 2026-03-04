@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -44,7 +43,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/{id}")
-    public ApplicationResponse get(@PathVariable UUID id) {
+    public ApplicationResponse get(@PathVariable Long id) {
         return repository.findById(id)
                 .map(this::toResponse)
                 .orElseThrow(() -> new IllegalArgumentException("Application not found: " + id));
