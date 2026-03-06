@@ -78,7 +78,7 @@ http://localhost:8080
 
 ### Create Application
 
-`POST /api/applications`
+`POST /applications`
 
 Example request body:
 
@@ -93,17 +93,17 @@ Example request body:
 
 ### Get All Applications
 
-`GET /api/applications`
+`GET /applications`
 
 ### Filter Applications
 
-`GET /api/applications?company=Nutanix`
-`GET /api/applications?status=INTERVIEW`
-`GET /api/applications?location=Toronto`
+`GET /applications?company=Nutanix`
+`GET /applications?status=INTERVIEW`
+`GET /applications?location=Toronto`
 
 Multiple filters can be combined:
 
-`GET /api/applications?company=Nutanix&status=INTERVIEW`
+`GET /applications?company=Nutanix&status=INTERVIEW`
 
 ---
 
