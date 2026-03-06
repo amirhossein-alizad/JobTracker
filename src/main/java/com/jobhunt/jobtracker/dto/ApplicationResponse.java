@@ -1,12 +1,15 @@
 package com.jobhunt.jobtracker.dto;
 
+import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.Instant;
 import java.time.LocalDate;
 
 @Getter
+@AllArgsConstructor
 public class ApplicationResponse {
     private Long id;
     private String company;
@@ -21,21 +24,12 @@ public class ApplicationResponse {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public ApplicationResponse(Long id, String company, String roleTitle, String location, Status status,
-                               String source, LocalDate appliedDate, String jobUrl, Integer salaryMin, Integer salaryMax,
-                               Instant createdAt, Instant updatedAt) {
-        this.id = id;
-        this.company = company;
-        this.roleTitle = roleTitle;
-        this.location = location;
-        this.status = status;
-        this.source = source;
-        this.appliedDate = appliedDate;
-        this.jobUrl = jobUrl;
-        this.salaryMin = salaryMin;
-        this.salaryMax = salaryMax;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public static ApplicationResponse toResponse(Application e) {
+        return new ApplicationResponse(
+                e.getId(), e.getCompany(), e.getRoleTitle(), e.getLocation(), e.getStatus(),
+                e.getSource(), e.getAppliedDate(), e.getJobUrl(), e.getSalaryMin(), e.getSalaryMax(),
+                e.getCreatedAt(), e.getUpdatedAt()
+        );
     }
 
 }

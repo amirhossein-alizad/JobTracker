@@ -37,18 +37,18 @@ public class ApplicationController {
         e.setSalaryMax(req.getSalaryMax());
 
         Application saved = repository.save(e);
-        return toResponse(saved);
+        return ApplicationResponse.toResponse(saved);
     }
 
     @GetMapping
     public List<ApplicationResponse> list() {
-        return repository.findAll().stream().map(this::toResponse).toList();
+        return repository.findAll().stream().map(ApplicationResponse::toResponse).toList();
     }
 
     @GetMapping("/{id}")
     public ApplicationResponse get(@PathVariable Long id) {
         return repository.findById(id)
-                .map(this::toResponse)
+                .map(ApplicationResponse::toResponse)
                 .orElseThrow(() -> new NotFoundException("Application not found: " + id));
     }
 
@@ -77,7 +77,7 @@ public class ApplicationController {
 
         return repository.findAll(spec)
                 .stream()
-                .map(this::toResponse)
+                .map(ApplicationResponse::toResponse)
                 .toList();
     }
 
@@ -86,14 +86,7 @@ public class ApplicationController {
         Application application = repository.findById(id).orElseThrow(() -> new NotFoundException("Application not found: " + id));
         application.update(req);
         Application saved = repository.save(application);
-        return toResponse(saved);
+        return ApplicationResponse.toResponse(saved);
     }
 
-    private ApplicationResponse toResponse(Application e) {
-        return new ApplicationResponse(
-                e.getId(), e.getCompany(), e.getRoleTitle(), e.getLocation(), e.getStatus(),
-                e.getSource(), e.getAppliedDate(), e.getJobUrl(), e.getSalaryMin(), e.getSalaryMax(),
-                e.getCreatedAt(), e.getUpdatedAt()
-        );
-    }
 }
