@@ -34,6 +34,15 @@ public class NoteController {
                 .orElseThrow(() -> new NotFoundException("Note not found: " + id));
     }
 
+    @GetMapping("/application/{applicationId}")
+    public List<NoteResponse> listByApplication(@PathVariable Long applicationId) {
+        applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NotFoundException("Application not found: " + applicationId));
+        return noteRepository.findByApplicationIdOrderByCreatedAtDesc(applicationId).stream()
+                .map(NoteResponse::toResponse)
+                .toList();
+    }
+
     @PostMapping("/{applicationId}")
     @ResponseStatus(HttpStatus.CREATED)
     public NoteResponse create(@PathVariable Long applicationId, @RequestBody CreateNoteRequest req) {
