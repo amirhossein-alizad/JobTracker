@@ -2,11 +2,14 @@ package com.jobhunt.jobtracker.controller;
 
 import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Note;
+import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.CreateNoteRequest;
 import com.jobhunt.jobtracker.dto.NoteResponse;
 import com.jobhunt.jobtracker.exception.NotFoundException;
+import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
 import com.jobhunt.jobtracker.repository.NoteRepository;
+import com.jobhunt.jobtracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +21,20 @@ import java.util.List;
 public class NoteController {
     @Autowired
     private NoteRepository noteRepository;
-
     @Autowired
     private ApplicationRepository applicationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public List<NoteResponse> list() {
+        //TODO: should only return notes for applications of the current user
         return noteRepository.findAll().stream().map(NoteResponse::toResponse).toList();
     }
 
     @GetMapping("/{id}")
     public NoteResponse get(@PathVariable Long id) {
+        //TODO: should only return if the usernames match
         return noteRepository.findById(id)
                 .map(NoteResponse::toResponse)
                 .orElseThrow(() -> new NotFoundException("Note not found: " + id));
@@ -36,6 +42,7 @@ public class NoteController {
 
     @GetMapping("/application/{applicationId}")
     public List<NoteResponse> listByApplication(@PathVariable Long applicationId) {
+        //TODO: should only return if the usernames match
         applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new NotFoundException("Application not found: " + applicationId));
         return noteRepository.findByApplicationIdOrderByCreatedAtDesc(applicationId).stream()
@@ -46,8 +53,12 @@ public class NoteController {
     @PostMapping("/{applicationId}")
     @ResponseStatus(HttpStatus.CREATED)
     public NoteResponse create(@PathVariable Long applicationId, @RequestBody CreateNoteRequest req) {
+        User user = userRepository.findById(req.getUsername())
+                .orElseThrow(() -> new NotFoundException("User not found: " + req.getUsername()));
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new NotFoundException("Application not found: " + applicationId));
+        if (!application.getUser().equals(user))
+            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + id);
         Note note = new Note();
         note.setApplication(application);
         note.setText(req.getText());

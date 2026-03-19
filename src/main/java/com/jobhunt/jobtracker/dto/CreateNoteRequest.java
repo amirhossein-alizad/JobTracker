@@ -6,5 +6,7 @@ import lombok.Getter;
 @Getter
 public class CreateNoteRequest {
     @NotBlank
-    String Text;
+    private String username;
+    @NotBlank
+    private String Text;
 }
