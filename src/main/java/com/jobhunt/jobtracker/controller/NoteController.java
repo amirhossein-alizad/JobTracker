@@ -58,7 +58,7 @@ public class NoteController {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new NotFoundException("Application not found: " + applicationId));
         if (!application.getUser().equals(user))
-            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + id);
+            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + applicationId);
         Note note = new Note();
         note.setApplication(application);
         note.setText(req.getText());
