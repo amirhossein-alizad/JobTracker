@@ -2,12 +2,15 @@ package com.jobhunt.jobtracker.controller;
 
 import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
+import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
 import com.jobhunt.jobtracker.exception.NotFoundException;
+import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
 import com.jobhunt.jobtracker.repository.ApplicationSpecification;
+import com.jobhunt.jobtracker.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,11 +25,16 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req) {
+        User user = userRepository.findById(req.getUsername())
+                .orElseThrow(() -> new NotFoundException("User not found: " + req.getUsername()));
         Application e = new Application();
+        e.setUser(user);
         e.setCompany(req.getCompany());
         e.setRoleTitle(req.getRoleTitle());
         e.setLocation(req.getLocation());
@@ -83,7 +91,11 @@ public class ApplicationController {
 
     @PatchMapping("/{id}")
     public ApplicationResponse update(@RequestBody UpdateApplicationRequest req, @PathVariable Long id) {
+        User user = userRepository.findById(req.getUsername())
+                .orElseThrow(() -> new NotFoundException("User not found: " + req.getUsername()));
         Application application = repository.findById(id).orElseThrow(() -> new NotFoundException("Application not found: " + id));
+        if (!application.getUser().equals(user))
+            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + id);
         application.update(req);
         Application saved = repository.save(application);
         return ApplicationResponse.toResponse(saved);

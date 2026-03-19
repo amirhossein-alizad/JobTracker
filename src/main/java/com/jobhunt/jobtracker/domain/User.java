@@ -23,4 +23,14 @@ public class User {
     void prePersist() {
         createdAt = Instant.now();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return username.equals(user.username);
+    }
 }
