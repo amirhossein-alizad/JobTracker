@@ -1,5 +1,6 @@
 package com.jobhunt.jobtracker.controller;
 
+import com.jobhunt.jobtracker.Service.ApplicationService;
 import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
 import com.jobhunt.jobtracker.domain.User;
@@ -27,25 +28,16 @@ public class ApplicationController {
     private ApplicationRepository repository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ApplicationService applicationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req) {
         User user = userRepository.findById(req.getUsername())
                 .orElseThrow(() -> new NotFoundException("User not found: " + req.getUsername()));
-        Application e = new Application();
-        e.setUser(user);
-        e.setCompany(req.getCompany());
-        e.setRoleTitle(req.getRoleTitle());
-        e.setLocation(req.getLocation());
-        e.setSource(req.getSource());
-        e.setAppliedDate(req.getAppliedDate());
-        e.setJobUrl(req.getJobUrl());
-        e.setSalaryMin(req.getSalaryMin());
-        e.setSalaryMax(req.getSalaryMax());
-
-        Application saved = repository.save(e);
-        return ApplicationResponse.toResponse(saved);
+        Application application = applicationService.createApplicationFromRequest(req, user);
+        return ApplicationResponse.toResponse(application);
     }
 
     @GetMapping
