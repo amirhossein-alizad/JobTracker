@@ -50,11 +50,13 @@ public class ApplicationController {
 
     @GetMapping
     public List<ApplicationResponse> list() {
+        //TODO: should only return applications for the current user
         return repository.findAll().stream().map(ApplicationResponse::toResponse).toList();
     }
 
     @GetMapping("/{id}")
     public ApplicationResponse get(@PathVariable Long id) {
+        //TODO: should only return if the usernames match
         return repository.findById(id)
                 .map(ApplicationResponse::toResponse)
                 .orElseThrow(() -> new NotFoundException("Application not found: " + id));
@@ -68,6 +70,7 @@ public class ApplicationController {
             @RequestParam(required = false) Status status
     ) {
         Specification<Application> spec = Specification.where((Specification<Application>) null);
+        //TODO: add username filter to only return applications for the current user
 
         if (company != null && !company.isBlank()) {
             spec = spec.and(ApplicationSpecification.companyContains(company));
