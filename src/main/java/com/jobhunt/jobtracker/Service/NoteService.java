@@ -7,14 +7,14 @@ import com.jobhunt.jobtracker.dto.CreateNoteRequest;
 import com.jobhunt.jobtracker.exception.NotFoundException;
 import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
 import com.jobhunt.jobtracker.repository.NoteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class NoteService {
-    @Autowired
     private NoteRepository noteRepository;
 
 

@@ -3,27 +3,22 @@ package com.jobhunt.jobtracker.Service;
 import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
 import com.jobhunt.jobtracker.domain.User;
-import com.jobhunt.jobtracker.dto.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
 import com.jobhunt.jobtracker.exception.NotFoundException;
 import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
 import com.jobhunt.jobtracker.repository.ApplicationSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ApplicationService {
-    @Autowired
     private ApplicationRepository applicationRepository;
-
-    public ApplicationResponse toResponse(Application application) {
-        return ApplicationResponse.toResponse(application);
-    }
 
     public Application createApplicationFromRequest(CreateApplicationRequest req, User user) {
         Application e = new Application();

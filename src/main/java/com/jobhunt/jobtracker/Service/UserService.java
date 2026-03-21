@@ -3,12 +3,12 @@ package com.jobhunt.jobtracker.Service;
 import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.exception.NotFoundException;
 import com.jobhunt.jobtracker.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserService {
-    @Autowired
     private UserRepository userRepository;
 
     public User getUserByUsername(String username) {
