@@ -8,7 +8,7 @@ import com.jobhunt.jobtracker.domain.Note;
 import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.CreateNoteRequest;
 import com.jobhunt.jobtracker.dto.NoteResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/notes")
+@AllArgsConstructor
 public class NoteController {
-    @Autowired
     private NoteService noteService;
-    @Autowired
     private ApplicationService applicationService;
-    @Autowired
     private UserService userService;
 
     @GetMapping

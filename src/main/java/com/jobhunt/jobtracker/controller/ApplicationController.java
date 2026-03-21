@@ -9,7 +9,7 @@ import com.jobhunt.jobtracker.dto.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/applications")
+@AllArgsConstructor
 public class ApplicationController {
 
-    @Autowired
     private ApplicationService applicationService;
-    @Autowired
     private UserService userService;
 
     @PostMapping
