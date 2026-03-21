@@ -8,8 +8,6 @@ import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
-import com.jobhunt.jobtracker.exception.NotFoundException;
-import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
 import com.jobhunt.jobtracker.repository.ApplicationSpecification;
 import com.jobhunt.jobtracker.repository.UserRepository;
@@ -45,15 +43,13 @@ public class ApplicationController {
     @GetMapping
     public List<ApplicationResponse> list() {
         //TODO: should only return applications for the current user
-        return repository.findAll().stream().map(ApplicationResponse::toResponse).toList();
+        return applicationService.getAllApplications();
     }
 
     @GetMapping("/{id}")
     public ApplicationResponse get(@PathVariable Long id) {
         //TODO: should only return if the usernames match
-        return repository.findById(id)
-                .map(ApplicationResponse::toResponse)
-                .orElseThrow(() -> new NotFoundException("Application not found: " + id));
+        return applicationService.getApplicationById(id);
     }
 
     @GetMapping
@@ -88,14 +84,8 @@ public class ApplicationController {
 
     @PatchMapping("/{id}")
     public ApplicationResponse update(@RequestBody UpdateApplicationRequest req, @PathVariable Long id) {
-        User user = userRepository.findById(req.getUsername())
-                .orElseThrow(() -> new NotFoundException("User not found: " + req.getUsername()));
-        Application application = repository.findById(id).orElseThrow(() -> new NotFoundException("Application not found: " + id));
-        if (!application.getUser().equals(user))
-            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + id);
-        application.update(req);
-        Application saved = repository.save(application);
-        return ApplicationResponse.toResponse(saved);
+        User user = userService.getUserByUsername(req.getUsername());
+        return applicationService.updateApplication(id, user, req);
     }
 
 }
