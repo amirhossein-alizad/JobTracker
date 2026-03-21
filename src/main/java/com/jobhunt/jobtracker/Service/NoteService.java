@@ -1,7 +1,11 @@
 package com.jobhunt.jobtracker.Service;
 
-import com.jobhunt.jobtracker.dto.NoteResponse;
+import com.jobhunt.jobtracker.domain.Application;
+import com.jobhunt.jobtracker.domain.Note;
+import com.jobhunt.jobtracker.domain.User;
+import com.jobhunt.jobtracker.dto.CreateNoteRequest;
 import com.jobhunt.jobtracker.exception.NotFoundException;
+import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
 import com.jobhunt.jobtracker.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,20 +18,27 @@ public class NoteService {
     private NoteRepository noteRepository;
 
 
-    public List<NoteResponse> getAllNotes() {
-        return noteRepository.findAll().stream().map(NoteResponse::toResponse).toList();
+    public List<Note> getAllNotes() {
+        return noteRepository.findAll().stream().toList();
     }
 
-    public NoteResponse getNoteById(Long id) {
+    public Note getNoteById(Long id) {
         return noteRepository.findById(id)
-                .map(NoteResponse::toResponse)
                 .orElseThrow(() -> new NotFoundException("Note not found: " + id));
     }
 
 
-    public List<NoteResponse> getAllNotesByApplicationId(Long applicationId) {
+    public List<Note> getAllNotesByApplicationId(Long applicationId) {
         return noteRepository.findByApplicationIdOrderByCreatedAtDesc(applicationId).stream()
-                .map(NoteResponse::toResponse)
                 .toList();
+    }
+
+    public Note createNoteForApplication(CreateNoteRequest req, Application application, User user) {
+        if (!application.getUser().equals(user))
+            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + application.getId());
+        Note note = new Note();
+        note.setApplication(application);
+        note.setText(req.getText());
+        return noteRepository.save(note);
     }
 }
