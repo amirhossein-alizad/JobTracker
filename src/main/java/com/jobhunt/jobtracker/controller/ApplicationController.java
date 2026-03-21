@@ -2,6 +2,7 @@ package com.jobhunt.jobtracker.controller;
 
 import com.jobhunt.jobtracker.Service.ApplicationService;
 import com.jobhunt.jobtracker.Service.UserService;
+import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
 import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.ApplicationResponse;
@@ -27,19 +28,22 @@ public class ApplicationController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req) {
         User user = userService.getUserByUsername(req.getUsername());
-        return applicationService.createApplicationFromRequest(req, user);
+        Application application = applicationService.createApplicationFromRequest(req, user);
+        return ApplicationResponse.toResponse(application);
     }
 
     @GetMapping
     public List<ApplicationResponse> list() {
         //TODO: should only return applications for the current user
-        return applicationService.getAllApplications();
+        List<Application> applications = applicationService.getAllApplications();
+        return applications.stream().map(ApplicationResponse::toResponse).toList();
     }
 
     @GetMapping("/{id}")
     public ApplicationResponse get(@PathVariable Long id) {
         //TODO: should only return if the usernames match
-        return applicationService.getApplicationById(id);
+        Application application = applicationService.getApplicationById(id);
+        return ApplicationResponse.toResponse(application);
     }
 
     @GetMapping
@@ -49,13 +53,15 @@ public class ApplicationController {
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Status status
     ) {
-        return applicationService.searchApplications(company, role, location, status);
+        List<Application> applications = applicationService.searchApplications(company, role, location, status);
+        return applications.stream().map(ApplicationResponse::toResponse).toList();
     }
 
     @PatchMapping("/{id}")
     public ApplicationResponse update(@RequestBody UpdateApplicationRequest req, @PathVariable Long id) {
         User user = userService.getUserByUsername(req.getUsername());
-        return applicationService.updateApplication(id, user, req);
+        Application application = applicationService.updateApplication(id, user, req);
+        return ApplicationResponse.toResponse(application);
     }
 
 }

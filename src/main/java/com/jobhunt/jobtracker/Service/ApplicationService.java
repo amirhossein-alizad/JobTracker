@@ -21,7 +21,11 @@ public class ApplicationService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
-    public ApplicationResponse createApplicationFromRequest(CreateApplicationRequest req, User user) {
+    public ApplicationResponse toResponse(Application application) {
+        return ApplicationResponse.toResponse(application);
+    }
+
+    public Application createApplicationFromRequest(CreateApplicationRequest req, User user) {
         Application e = new Application();
         e.setUser(user);
         e.setCompany(req.getCompany());
@@ -32,30 +36,27 @@ public class ApplicationService {
         e.setJobUrl(req.getJobUrl());
         e.setSalaryMin(req.getSalaryMin());
         e.setSalaryMax(req.getSalaryMax());
-        Application saved = applicationRepository.save(e);
-        return ApplicationResponse.toResponse(saved);
+        return applicationRepository.save(e);
     }
 
-    public List<ApplicationResponse> getAllApplications() {
-        return applicationRepository.findAll().stream().map(ApplicationResponse::toResponse).toList();
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll().stream().toList();
     }
 
-    public ApplicationResponse getApplicationById(Long id) {
+    public Application getApplicationById(Long id) {
         return applicationRepository.findById(id)
-                .map(ApplicationResponse::toResponse)
                 .orElseThrow(() -> new NotFoundException("Application not found: " + id));
     }
 
-    public ApplicationResponse updateApplication(Long id, User user, UpdateApplicationRequest req) {
+    public Application updateApplication(Long id, User user, UpdateApplicationRequest req) {
         Application application = applicationRepository.findById(id).orElseThrow(() -> new NotFoundException("Application not found: " + id));
         if (!application.getUser().equals(user))
             throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + id);
         application.update(req);
-        Application saved = applicationRepository.save(application);
-        return ApplicationResponse.toResponse(saved);
+        return applicationRepository.save(application);
     }
 
-    public List<ApplicationResponse> searchApplications(String company, String role, String location, Status status) {
+    public List<Application> searchApplications(String company, String role, String location, Status status) {
         Specification<Application> spec = Specification.where((Specification<Application>) null);
         //TODO: add username filter to only return applications for the current user
 
@@ -75,7 +76,6 @@ public class ApplicationService {
 
         return applicationRepository.findAll(spec)
                 .stream()
-                .map(ApplicationResponse::toResponse)
                 .toList();
     }
 }
