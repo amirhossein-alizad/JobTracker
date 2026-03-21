@@ -2,7 +2,6 @@ package com.jobhunt.jobtracker.controller;
 
 import com.jobhunt.jobtracker.Service.ApplicationService;
 import com.jobhunt.jobtracker.Service.UserService;
-import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
 import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.ApplicationResponse;
@@ -34,8 +33,8 @@ public class ApplicationController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req) {
         User user = userService.getUserByUsername(req.getUsername());
-        Application application = applicationService.createApplicationFromRequest(req, user);
-        return ApplicationResponse.toResponse(application);
+        return applicationService.createApplicationFromRequest(req, user);
+        ;
     }
 
     @GetMapping

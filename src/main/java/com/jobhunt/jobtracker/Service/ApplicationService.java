@@ -21,7 +21,7 @@ public class ApplicationService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
-    public Application createApplicationFromRequest(CreateApplicationRequest req, User user) {
+    public ApplicationResponse createApplicationFromRequest(CreateApplicationRequest req, User user) {
         Application e = new Application();
         e.setUser(user);
         e.setCompany(req.getCompany());
@@ -32,7 +32,8 @@ public class ApplicationService {
         e.setJobUrl(req.getJobUrl());
         e.setSalaryMin(req.getSalaryMin());
         e.setSalaryMax(req.getSalaryMax());
-        return applicationRepository.save(e);
+        Application saved = applicationRepository.save(e);
+        return ApplicationResponse.toResponse(saved);
     }
 
     public List<ApplicationResponse> getAllApplications() {
