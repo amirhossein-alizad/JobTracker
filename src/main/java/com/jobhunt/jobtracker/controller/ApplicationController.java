@@ -9,11 +9,9 @@ import com.jobhunt.jobtracker.dto.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
-import com.jobhunt.jobtracker.repository.ApplicationSpecification;
 import com.jobhunt.jobtracker.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,27 +57,7 @@ public class ApplicationController {
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Status status
     ) {
-        Specification<Application> spec = Specification.where((Specification<Application>) null);
-        //TODO: add username filter to only return applications for the current user
-
-        if (company != null && !company.isBlank()) {
-            spec = spec.and(ApplicationSpecification.companyContains(company));
-
-        }
-        if (role != null && !role.isBlank()) {
-            spec = spec.and(ApplicationSpecification.roleContains(role));
-        }
-        if (location != null && !location.isBlank()) {
-            spec = spec.and(ApplicationSpecification.locationContains(location));
-        }
-        if (status != null) {
-            spec = spec.and(ApplicationSpecification.hasStatus(status));
-        }
-
-        return repository.findAll(spec)
-                .stream()
-                .map(ApplicationResponse::toResponse)
-                .toList();
+        return applicationService.searchApplications(company, role, location, status);
     }
 
     @PatchMapping("/{id}")
