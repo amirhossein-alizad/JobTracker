@@ -1,5 +1,7 @@
 package com.jobhunt.jobtracker.controller;
 
+import com.jobhunt.jobtracker.Service.ApplicationService;
+import com.jobhunt.jobtracker.Service.NoteService;
 import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Note;
 import com.jobhunt.jobtracker.domain.User;
@@ -26,28 +28,29 @@ public class NoteController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NoteService noteService;
+    @Autowired
+    private ApplicationService applicationService;
+
     @GetMapping
     public List<NoteResponse> list() {
         //TODO: should only return notes for applications of the current user
-        return noteRepository.findAll().stream().map(NoteResponse::toResponse).toList();
+        return noteService.getAllNotes();
     }
 
     @GetMapping("/{id}")
     public NoteResponse get(@PathVariable Long id) {
         //TODO: should only return if the usernames match
-        return noteRepository.findById(id)
-                .map(NoteResponse::toResponse)
-                .orElseThrow(() -> new NotFoundException("Note not found: " + id));
+        return noteService.getNoteById(id);
     }
 
     @GetMapping("/application/{applicationId}")
     public List<NoteResponse> listByApplication(@PathVariable Long applicationId) {
         //TODO: should only return if the usernames match
-        applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new NotFoundException("Application not found: " + applicationId));
-        return noteRepository.findByApplicationIdOrderByCreatedAtDesc(applicationId).stream()
-                .map(NoteResponse::toResponse)
-                .toList();
+        //TODO: Should think about checking for existence another way
+        applicationService.getApplicationById(applicationId);
+        return noteService.getAllNotesByApplicationId(applicationId);
     }
 
     @PostMapping("/{applicationId}")
