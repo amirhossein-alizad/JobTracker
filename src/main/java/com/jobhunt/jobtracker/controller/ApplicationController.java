@@ -7,8 +7,6 @@ import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
-import com.jobhunt.jobtracker.repository.ApplicationRepository;
-import com.jobhunt.jobtracker.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +19,6 @@ import java.util.List;
 public class ApplicationController {
 
     @Autowired
-    private ApplicationRepository repository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private ApplicationService applicationService;
     @Autowired
     private UserService userService;
@@ -34,7 +28,6 @@ public class ApplicationController {
     public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req) {
         User user = userService.getUserByUsername(req.getUsername());
         return applicationService.createApplicationFromRequest(req, user);
-        ;
     }
 
     @GetMapping
