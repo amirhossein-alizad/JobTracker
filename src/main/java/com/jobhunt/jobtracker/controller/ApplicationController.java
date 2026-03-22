@@ -39,13 +39,14 @@ public class ApplicationController {
     }
 
     @GetMapping("/{id}")
+    @ExceptionHandler(RuntimeException.class)
     public ApplicationResponse get(@PathVariable Long id) {
         //TODO: should only return if the usernames match
         Application application = applicationService.getApplicationById(id);
         return ApplicationResponse.toResponse(application);
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public List<ApplicationResponse> search(
             @RequestParam(required = false) String company,
             @RequestParam(required = false) String role,
