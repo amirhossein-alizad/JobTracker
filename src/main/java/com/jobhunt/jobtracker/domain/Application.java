@@ -70,9 +70,9 @@ public class Application {
     }
 
     public void update(UpdateApplicationRequest req) {
-        if (!req.getLocation().isBlank())
+        if (req.getLocation() != null && !req.getLocation().isBlank())
             this.location = req.getLocation();
-        if (!req.getJobUrl().isBlank())
+        if (req.getJobUrl() != null && !req.getJobUrl().isBlank())
             this.jobUrl = req.getJobUrl();
         if (req.getStatus() != null)
             this.status = req.getStatus();
@@ -80,9 +80,9 @@ public class Application {
             this.salaryMin = req.getSalaryMin();
         if (req.getSalaryMax() != null)
             this.salaryMax = req.getSalaryMax();
-        if (!req.getRoleTitle().isBlank())
+        if (req.getRoleTitle() != null && !req.getRoleTitle().isBlank())
             this.roleTitle = req.getRoleTitle();
-        if (!req.getSource().isBlank())
+        if (req.getSource() != null && !req.getSource().isBlank())
             this.source = req.getSource();
     }
 

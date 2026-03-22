@@ -10,6 +10,7 @@ import com.jobhunt.jobtracker.exception.NotFoundException;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
 import com.jobhunt.jobtracker.repository.NoteRepository;
 import com.jobhunt.jobtracker.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -82,6 +82,12 @@ public class ApplicationControllerTest {
         bmo.setSalaryMax(125000);
 
         applicationRepository.saveAll(List.of(nutanix, bmo));
+    }
+
+    @AfterEach
+    public void cleanup() {
+        applicationRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 
@@ -166,5 +172,76 @@ public class ApplicationControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertInstanceOf(NotFoundException.class, result.getResolvedException()))
                 .andExpect(result -> assertEquals("User not found: nonexistent_user", result.getResolvedException().getMessage()));
+    }
+
+//    @Test
+//    public void testSearchApplications() throws Exception {
+//        mvc.perform(get("/applications/search")
+//                        .param("company", "Nutanix"))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.length()").value(1))
+//                .andExpect(jsonPath("$[0].company").value("Nutanix"));
+//    }
+
+    public void testUpdateApplication() throws Exception {
+        Application application = applicationRepository.findAll().getFirst();
+        String updateAppJson = """
+                {
+                    "username": "amir",
+                    "status": "INTERVIEW"
+                }
+                """;
+
+        mvc.perform(
+                        post("/applications/" + application.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updateAppJson)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("INTERVIEW"));
+    }
+
+    @Test
+    public void testUpdateApplicationWithInvalidUser() throws Exception {
+        Application application = applicationRepository.findAll().getFirst();
+        String updateAppJson = """
+                {
+                    "username": "nonexistent_user",
+                    "status": "INTERVIEW"
+                }
+                """;
+
+        mvc.perform(
+                        patch("/applications/" + application.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updateAppJson)
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertInstanceOf(NotFoundException.class, result.getResolvedException()))
+                .andExpect(result -> assertEquals("User not found: nonexistent_user", result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void testUpdateApplicationWithUnauthorizedUser() throws Exception {
+        User otherUser = new User();
+        otherUser.setUsername("other_user");
+        userRepository.save(otherUser);
+
+        String updateAppJson = """
+                {
+                    "username": "other_user",
+                    "status": "INTERVIEW"
+                }
+                """;
+        Application application = applicationRepository.findAll().getFirst();
+        System.out.println(application.getId());
+        mvc.perform(
+                        patch("/applications/" + application.getId()) // assuming application with id 1 belongs to "amir"
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updateAppJson)
+                )
+                .andExpect(status().isForbidden());
     }
 }
