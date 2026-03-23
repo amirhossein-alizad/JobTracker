@@ -52,7 +52,7 @@ public class ApplicationService {
     }
 
     public List<Application> searchApplications(String company, String role, String location, Status status) {
-        Specification<Application> spec = Specification.where((Specification<Application>) null);
+        Specification<Application> spec = (root, query, cb) -> cb.conjunction();
         //TODO: add username filter to only return applications for the current user
 
         if (company != null && !company.isBlank()) {
