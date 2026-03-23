@@ -174,15 +174,21 @@ public class ApplicationControllerTest {
                 .andExpect(result -> assertEquals("User not found: nonexistent_user", result.getResolvedException().getMessage()));
     }
 
-//    @Test
-//    public void testSearchApplications() throws Exception {
-//        mvc.perform(get("/applications/search")
-//                        .param("company", "Nutanix"))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.length()").value(1))
-//                .andExpect(jsonPath("$[0].company").value("Nutanix"));
-//    }
+    @Test
+    public void testSearchApplications() throws Exception {
+        mvc.perform(get("/applications/search")
+                        .param("company", "Nutanix"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].company").value("Nutanix"));
+    }
+
+    @Test
+    public void testSearchApplicationsWithNoParam() throws Exception {
+        mvc.perform(get("/applications/search"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
 
     @Test
     public void testUpdateApplication() throws Exception {
