@@ -184,6 +184,7 @@ public class ApplicationControllerTest {
 //                .andExpect(jsonPath("$[0].company").value("Nutanix"));
 //    }
 
+    @Test
     public void testUpdateApplication() throws Exception {
         Application application = applicationRepository.findAll().getFirst();
         String updateAppJson = """
