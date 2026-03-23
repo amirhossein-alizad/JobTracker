@@ -195,11 +195,10 @@ public class ApplicationControllerTest {
                 """;
 
         mvc.perform(
-                        post("/applications/" + application.getId())
+                        patch("/applications/" + application.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updateAppJson)
                 )
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("INTERVIEW"));
     }
