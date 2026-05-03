@@ -22,7 +22,7 @@ public class ApplicationService {
 
     public Application createApplicationFromRequest(CreateApplicationRequest req, User user) {
         Application e = new Application();
-        e.setUser(user);
+        e.setUser(null);
         e.setCompany(req.getCompany());
         e.setRoleTitle(req.getRoleTitle());
         e.setLocation(req.getLocation());

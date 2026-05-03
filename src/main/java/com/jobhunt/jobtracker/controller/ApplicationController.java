@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/applications")
 @AllArgsConstructor
@@ -26,8 +27,8 @@ public class ApplicationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req) {
-        User user = userService.getUserByUsername(req.getUsername());
-        Application application = applicationService.createApplicationFromRequest(req, user);
+//        User user = userService.getUserByUsername(req.getUsername());
+        Application application = applicationService.createApplicationFromRequest(req, null);
         return ApplicationResponse.toResponse(application);
     }
 
