@@ -31,6 +31,7 @@ public class ApplicationService {
         e.setJobUrl(req.getJobUrl());
         e.setSalaryMin(req.getSalaryMin());
         e.setSalaryMax(req.getSalaryMax());
+        e.setStatus(req.getStatus());
         return applicationRepository.save(e);
     }
 

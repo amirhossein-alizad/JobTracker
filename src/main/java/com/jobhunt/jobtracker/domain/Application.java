@@ -62,6 +62,7 @@ public class Application {
         createdAt = now;
         updatedAt = now;
         if (status == null) status = Status.APPLIED;
+        if (appliedDate == null) appliedDate = LocalDate.now();
     }
 
     @PreUpdate
