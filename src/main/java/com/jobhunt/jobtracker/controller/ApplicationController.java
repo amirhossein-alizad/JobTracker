@@ -65,4 +65,8 @@ public class ApplicationController {
         return ApplicationResponse.toResponse(application);
     }
 
+    @DeleteMapping
+    public void delete(@RequestParam Long id) {
+        applicationService.deleteApplication(id, null);
+    }
 }
