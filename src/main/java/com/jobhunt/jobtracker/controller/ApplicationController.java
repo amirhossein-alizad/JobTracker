@@ -60,8 +60,8 @@ public class ApplicationController {
 
     @PatchMapping("/{id}")
     public ApplicationResponse update(@RequestBody UpdateApplicationRequest req, @PathVariable Long id) {
-        User user = userService.getUserByUsername(req.getUsername());
-        Application application = applicationService.updateApplication(id, user, req);
+//        User user = userService.getUserByUsername(req.getUsername());
+        Application application = applicationService.updateApplication(id, null, req);
         return ApplicationResponse.toResponse(application);
     }
 

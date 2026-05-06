@@ -46,8 +46,8 @@ public class ApplicationService {
 
     public Application updateApplication(Long id, User user, UpdateApplicationRequest req) {
         Application application = applicationRepository.findById(id).orElseThrow(() -> new NotFoundException("Application not found: " + id));
-        if (!application.getUser().equals(user))
-            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + id);
+//        if (!application.getUser().equals(user))
+//            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + id);
         application.update(req);
         return applicationRepository.save(application);
     }

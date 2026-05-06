@@ -7,7 +7,6 @@ import lombok.Getter;
 
 @Getter
 public class UpdateApplicationRequest {
-    @NotBlank
     private String username;
     private String roleTitle;
     private String location;
