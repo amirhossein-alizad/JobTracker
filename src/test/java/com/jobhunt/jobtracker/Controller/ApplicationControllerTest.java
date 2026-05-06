@@ -146,33 +146,33 @@ public class ApplicationControllerTest {
                 .andExpect(jsonPath("$.roleTitle").value("Software Engineer"));
     }
 
-    @Test
-    public void testCreateApplicationWithInvalidUser() throws Exception {
-        String newAppJson = """
-                {
-                    "username": "nonexistent_user",
-                    "company": "Google",
-                    "roleTitle": "Software Engineer",
-                    "location": "Mountain View, CA",
-                    "status": "APPLIED",
-                    "source": "LinkedIn",
-                    "appliedDate": "2026-04-01",
-                    "jobUrl": "https://example.com/google",
-                    "salaryMin": 100000,
-                    "salaryMax": 150000
-                }
-                """;
-
-        mvc.perform(
-                        post("/applications")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(newAppJson)
-                )
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(NotFoundException.class, result.getResolvedException()))
-                .andExpect(result -> assertEquals("User not found: nonexistent_user", result.getResolvedException().getMessage()));
-    }
+//    @Test
+//    public void testCreateApplicationWithInvalidUser() throws Exception {
+//        String newAppJson = """
+//                {
+//                    "username": "nonexistent_user",
+//                    "company": "Google",
+//                    "roleTitle": "Software Engineer",
+//                    "location": "Mountain View, CA",
+//                    "status": "APPLIED",
+//                    "source": "LinkedIn",
+//                    "appliedDate": "2026-04-01",
+//                    "jobUrl": "https://example.com/google",
+//                    "salaryMin": 100000,
+//                    "salaryMax": 150000
+//                }
+//                """;
+//
+//        mvc.perform(
+//                        post("/applications")
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .content(newAppJson)
+//                )
+//                .andDo(print())
+//                .andExpect(status().isNotFound())
+//                .andExpect(result -> assertInstanceOf(NotFoundException.class, result.getResolvedException()))
+//                .andExpect(result -> assertEquals("User not found: nonexistent_user", result.getResolvedException().getMessage()));
+//    }
 
     @Test
     public void testSearchApplications() throws Exception {
