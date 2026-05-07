@@ -49,9 +49,9 @@ public class NoteController {
     @PostMapping("/{applicationId}")
     @ResponseStatus(HttpStatus.CREATED)
     public NoteResponse create(@PathVariable Long applicationId, @RequestBody CreateNoteRequest req) {
-        User user = userService.getUserByUsername(req.getUsername());
+//        User user = userService.getUserByUsername(req.getUsername());
         Application application = applicationService.getApplicationById(applicationId);
-        Note note = noteService.createNoteForApplication(req, application, user);
+        Note note = noteService.createNoteForApplication(req, application, null);
         return NoteResponse.toResponse(note);
     }
 }

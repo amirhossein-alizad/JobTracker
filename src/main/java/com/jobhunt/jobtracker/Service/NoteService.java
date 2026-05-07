@@ -34,8 +34,8 @@ public class NoteService {
     }
 
     public Note createNoteForApplication(CreateNoteRequest req, Application application, User user) {
-        if (!application.getUser().equals(user))
-            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + application.getId());
+//        if (!application.getUser().equals(user))
+//            throw new UnAuthorizedAccessException("User " + req.getUsername() + " is not authorized to update this application: " + application.getId());
         Note note = new Note();
         note.setApplication(application);
         note.setText(req.getText());
