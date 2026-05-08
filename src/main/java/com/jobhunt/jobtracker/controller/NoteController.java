@@ -24,6 +24,7 @@ public class NoteController {
     private UserService userService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<NoteResponse> list() {
         //TODO: should only return notes for applications of the current user
         List<Note> notes = noteService.getAllNotes();
@@ -31,6 +32,7 @@ public class NoteController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public NoteResponse get(@PathVariable Long id) {
         //TODO: should only return if the usernames match
         Note note = noteService.getNoteById(id);
@@ -38,6 +40,7 @@ public class NoteController {
     }
 
     @GetMapping("/application/{applicationId}")
+    @ResponseStatus(HttpStatus.OK)
     public List<NoteResponse> listByApplication(@PathVariable Long applicationId) {
         //TODO: should only return if the usernames match
         //TODO: Should think about checking for existence another way
@@ -56,6 +59,7 @@ public class NoteController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestParam Long id) {
         noteService.deleteNote(id);
     }

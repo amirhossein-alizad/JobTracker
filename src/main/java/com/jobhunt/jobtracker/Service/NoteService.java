@@ -5,7 +5,7 @@ import com.jobhunt.jobtracker.domain.Note;
 import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.CreateNoteRequest;
 import com.jobhunt.jobtracker.exception.NotFoundException;
-import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
+import com.jobhunt.jobtracker.exception.ForbiddenException;
 import com.jobhunt.jobtracker.repository.NoteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

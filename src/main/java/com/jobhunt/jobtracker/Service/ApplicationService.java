@@ -6,7 +6,7 @@ import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
 import com.jobhunt.jobtracker.exception.NotFoundException;
-import com.jobhunt.jobtracker.exception.UnAuthorizedAccessException;
+import com.jobhunt.jobtracker.exception.ForbiddenException;
 import com.jobhunt.jobtracker.repository.ApplicationRepository;
 import com.jobhunt.jobtracker.repository.ApplicationSpecification;
 import lombok.AllArgsConstructor;
