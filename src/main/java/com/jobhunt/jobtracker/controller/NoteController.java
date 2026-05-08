@@ -54,4 +54,9 @@ public class NoteController {
         Note note = noteService.createNoteForApplication(req, application, null);
         return NoteResponse.toResponse(note);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        noteService.deleteNote(id);
+    }
 }

@@ -41,4 +41,10 @@ public class NoteService {
         note.setText(req.getText());
         return noteRepository.save(note);
     }
+
+    public void deleteNote(Long id) {
+        Note note = noteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Note not found: " + id));
+        noteRepository.delete(note);
+    }
 }
