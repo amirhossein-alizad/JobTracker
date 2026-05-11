@@ -1,0 +1,25 @@
+services:
+  jobtrackerdb:
+    image: postgres:latest
+    container_name: jobtrackerdb
+    environment:
+      POSTGRES_DB: jobtracker
+      POSTGRES_USER: amir
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - C:/postgres-data:/var/lib/postgresql
+
+  jobtracker-backend:
+    image: jobtracker-backend
+    container_name: jobtracker-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_ENV: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - jobtrackerdb
