@@ -16,6 +16,8 @@ public class User {
     @Id
     private String username;
 
+    @Column(nullable = false)
+    private String password;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
