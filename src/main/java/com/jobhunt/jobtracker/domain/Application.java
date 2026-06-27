@@ -1,6 +1,6 @@
 package com.jobhunt.jobtracker.domain;
 
-import com.jobhunt.jobtracker.dto.UpdateApplicationRequest;
+import com.jobhunt.jobtracker.dto.request.UpdateApplicationRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

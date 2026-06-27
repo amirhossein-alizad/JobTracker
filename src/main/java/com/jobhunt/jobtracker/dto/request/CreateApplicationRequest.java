@@ -1,4 +1,4 @@
-package com.jobhunt.jobtracker.dto;
+package com.jobhunt.jobtracker.dto.request;
 
 import com.jobhunt.jobtracker.domain.Status;
 import jakarta.validation.constraints.NotBlank;

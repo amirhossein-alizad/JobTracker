@@ -1,4 +1,4 @@
-package com.jobhunt.jobtracker.dto;
+package com.jobhunt.jobtracker.dto.response;
 
 import com.jobhunt.jobtracker.domain.Note;
 import lombok.AllArgsConstructor;
