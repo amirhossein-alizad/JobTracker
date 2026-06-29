@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateUserRequest {
+public class UserRequest {
     @NotBlank
     private String username;
     @NotBlank
