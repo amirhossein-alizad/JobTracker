@@ -2,6 +2,7 @@ package com.jobhunt.jobtracker.Service;
 
 import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.request.UserRequest;
+import com.jobhunt.jobtracker.dto.response.UserResponse;
 import com.jobhunt.jobtracker.exception.InvalidCredentialsException;
 import com.jobhunt.jobtracker.exception.NotFoundException;
 import com.jobhunt.jobtracker.exception.UserExistsException;
@@ -17,23 +18,25 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private JWTService jwtService;
 
-    public void createUser(UserRequest request) throws UserExistsException {
-        System.out.println(request.getUsername());
-        if(userRepository.existsByUsername(request.getUsername())) {
-            System.out.println("Username already exists: " + request.getUsername());
+    public UserResponse createUser(UserRequest request) throws UserExistsException {
+        if(userRepository.existsByUsername(request.getUsername()))
             throw new UserExistsException("Username already exists: " + request.getUsername());
-        }
         User user = new User();
-        System.out.println("HI");
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
+        String token = jwtService.generateToken(user.getUsername());
+        return new UserResponse(token);
     }
 
-    public void loginUser(UserRequest request) {
+    public UserResponse loginUser(UserRequest request) {
         User user = userRepository.findByUsername(request.getUsername());
         if(user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw new InvalidCredentialsException("Invalid Credentials.");
+
+        String token = jwtService.generateToken(user.getUsername());
+        return new UserResponse(token);
     }
 }

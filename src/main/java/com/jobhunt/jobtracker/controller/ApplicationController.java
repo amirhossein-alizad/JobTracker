@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -32,8 +33,9 @@ public class ApplicationController {
     }
 
     @GetMapping
-    public List<ApplicationResponse> list() {
-        //TODO: should only return applications for the current user
+    public List<ApplicationResponse> list(Principal principal) {
+        String username = principal.getName();
+
         List<Application> applications = applicationService.getAllApplications();
         return applications.stream().map(ApplicationResponse::toResponse).toList();
     }
