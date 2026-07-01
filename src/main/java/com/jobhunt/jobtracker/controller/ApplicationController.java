@@ -4,6 +4,7 @@ import com.jobhunt.jobtracker.Service.ApplicationService;
 import com.jobhunt.jobtracker.Service.UserService;
 import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Status;
+import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.response.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.request.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.request.UpdateApplicationRequest;
@@ -35,8 +36,8 @@ public class ApplicationController {
     @GetMapping
     public List<ApplicationResponse> list(Principal principal) {
         String username = principal.getName();
-
-        List<Application> applications = applicationService.getAllApplications();
+        User user = userService.getUserByUsername(username);
+        List<Application> applications = applicationService.getAllApplications(user);
         return applications.stream().map(ApplicationResponse::toResponse).toList();
     }
 

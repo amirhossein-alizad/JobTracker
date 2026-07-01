@@ -20,6 +20,10 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     private JWTService jwtService;
 
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public UserResponse createUser(UserRequest request) throws UserExistsException {
         if(userRepository.existsByUsername(request.getUsername()))
             throw new UserExistsException("Username already exists: " + request.getUsername());

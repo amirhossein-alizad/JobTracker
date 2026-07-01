@@ -34,8 +34,8 @@ public class ApplicationService {
         return applicationRepository.save(e);
     }
 
-    public List<Application> getAllApplications() {
-        return applicationRepository.findAll().stream().toList();
+    public List<Application> getAllApplications(User user) {
+        return applicationRepository.getApplicationsByUser(user);
     }
 
     public Application getApplicationById(Long id) {
