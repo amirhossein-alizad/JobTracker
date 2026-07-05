@@ -10,8 +10,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CreateApplicationRequest {
-    @NotBlank
-    private String username;
 
     @NotBlank
     private String company;

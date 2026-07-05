@@ -39,7 +39,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            System.out.println("right here");
             return;
         }
 

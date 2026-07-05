@@ -27,9 +27,10 @@ public class ApplicationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req) {
-//        User user = userService.getUserByUsername(req.getUsername());
-        Application application = applicationService.createApplicationFromRequest(req, null);
+    public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest req, Principal principal) {
+        String username = principal.getName();
+        User user = userService.getUserByUsername(username);
+        Application application = applicationService.createApplicationFromRequest(req, user);
         return ApplicationResponse.toResponse(application);
     }
 
