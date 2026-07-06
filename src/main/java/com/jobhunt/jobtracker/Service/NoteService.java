@@ -18,8 +18,8 @@ public class NoteService {
     private NoteRepository noteRepository;
 
 
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll().stream().toList();
+    public List<Note> getAllNotes(User user) {
+        return noteRepository.findAll().stream().filter(note -> note.getApplication().getUser().equals(user)).toList();
     }
 
     public Note getNoteById(Long id) {

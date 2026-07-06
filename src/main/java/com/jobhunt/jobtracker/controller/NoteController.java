@@ -26,17 +26,19 @@ public class NoteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<NoteResponse> list() {
-        //TODO: should only return notes for applications of the current user
-        List<Note> notes = noteService.getAllNotes();
+    public List<NoteResponse> list(Principal principal) {
+        String username = principal.getName();
+        User user = userService.getUserByUsername(username);
+        List<Note> notes = noteService.getAllNotes(user);
         return notes.stream().map(NoteResponse::toResponse).toList();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public NoteResponse get(@PathVariable Long id) {
-        //TODO: should only return if the usernames match
+    public NoteResponse get(@PathVariable Long id, Principal principal) {
         Note note = noteService.getNoteById(id);
+        if(!note.getApplication().getUser().equals(userService.getUserByUsername(principal.getName())))
+            throw new RuntimeException("User is not authorized to view this note: " + id);
         return NoteResponse.toResponse(note);
     }
 
@@ -65,7 +67,11 @@ public class NoteController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestParam Long id) {
+    public void delete(@RequestParam Long id, Principal principal) {
+        Note note = noteService.getNoteById(id);
+        if(!note.getApplication().getUser().equals(userService.getUserByUsername(principal.getName()))) {
+            throw new RuntimeException("User is not authorized to delete this note: " + id);
+        }
         noteService.deleteNote(id);
     }
 }
