@@ -5,12 +5,14 @@ import com.jobhunt.jobtracker.Service.NoteService;
 import com.jobhunt.jobtracker.Service.UserService;
 import com.jobhunt.jobtracker.domain.Application;
 import com.jobhunt.jobtracker.domain.Note;
+import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.request.CreateNoteRequest;
 import com.jobhunt.jobtracker.dto.response.NoteResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -40,20 +42,24 @@ public class NoteController {
 
     @GetMapping("/application/{applicationId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<NoteResponse> listByApplication(@PathVariable Long applicationId) {
-        //TODO: should only return if the usernames match
-        //TODO: Should think about checking for existence another way
-        applicationService.getApplicationById(applicationId);
+    public List<NoteResponse> listByApplication(@PathVariable Long applicationId, Principal principal) {
+        String username = principal.getName();
+        User user = userService.getUserByUsername(username);
+        Application application = applicationService.getApplicationById(applicationId);
+        if(!application.getUser().equals(user)) {
+            throw new RuntimeException("User " + username + " is not authorized to view notes for this application: " + applicationId);
+        }
         List<Note> notes = noteService.getAllNotesByApplicationId(applicationId);
         return notes.stream().map(NoteResponse::toResponse).toList();
     }
 
     @PostMapping("/{applicationId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public NoteResponse create(@PathVariable Long applicationId, @RequestBody CreateNoteRequest req) {
-//        User user = userService.getUserByUsername(req.getUsername());
+    public NoteResponse create(@PathVariable Long applicationId, @RequestBody CreateNoteRequest req, Principal principal) {
+        String username = principal.getName();
+        User user = userService.getUserByUsername(username);
         Application application = applicationService.getApplicationById(applicationId);
-        Note note = noteService.createNoteForApplication(req, application, null);
+        Note note = noteService.createNoteForApplication(req, application, user);
         return NoteResponse.toResponse(note);
     }
 
