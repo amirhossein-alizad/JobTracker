@@ -8,6 +8,7 @@ import com.jobhunt.jobtracker.exception.NotFoundException;
 import com.jobhunt.jobtracker.exception.UserExistsException;
 import com.jobhunt.jobtracker.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class UserService {
     private JWTService jwtService;
 
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return (User) Hibernate.unproxy(userRepository.findByUsername(username));
     }
 
     public UserResponse createUser(UserRequest request) throws UserExistsException {
