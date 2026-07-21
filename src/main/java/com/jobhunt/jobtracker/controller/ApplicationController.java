@@ -8,6 +8,7 @@ import com.jobhunt.jobtracker.domain.User;
 import com.jobhunt.jobtracker.dto.response.ApplicationResponse;
 import com.jobhunt.jobtracker.dto.request.CreateApplicationRequest;
 import com.jobhunt.jobtracker.dto.request.UpdateApplicationRequest;
+import com.jobhunt.jobtracker.exception.ForbiddenException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,9 +45,12 @@ public class ApplicationController {
 
     @GetMapping("/{id}")
     @ExceptionHandler(RuntimeException.class)
-    public ApplicationResponse get(@PathVariable Long id) {
-        //TODO: should only return if the usernames match
+    public ApplicationResponse get(@PathVariable Long id, Principal principal) {
+        String username = principal.getName();
         Application application = applicationService.getApplicationById(id);
+        if(!application.getUser().getUsername().equals(username)) {
+            throw new ForbiddenException("User " + username + " is not authorized to view this application: " + id);
+        }
         return ApplicationResponse.toResponse(application);
     }
 
