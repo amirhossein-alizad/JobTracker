@@ -66,10 +66,14 @@ public class ApplicationController {
     }
 
     @PatchMapping("/{id}")
-    public ApplicationResponse update(@RequestBody UpdateApplicationRequest req, @PathVariable Long id) {
-//        User user = userService.getUserByUsername(req.getUsername());
-        Application application = applicationService.updateApplication(id, null, req);
-        return ApplicationResponse.toResponse(application);
+    public ApplicationResponse update(@RequestBody UpdateApplicationRequest req, @PathVariable Long id, Principal principal) {
+        String username = principal.getName();
+        Application application = applicationService.getApplicationById(id);
+        if(!application.getUser().getUsername().equals(username)) {
+            throw new ForbiddenException("User " + username + " is not authorized to update this application: " + id);
+        }
+        Application updatedApplication = applicationService.updateApplication(application, req);
+        return ApplicationResponse.toResponse(updatedApplication);
     }
 
     @DeleteMapping
