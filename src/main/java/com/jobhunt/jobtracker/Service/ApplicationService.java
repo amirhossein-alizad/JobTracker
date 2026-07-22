@@ -71,10 +71,7 @@ public class ApplicationService {
                 .toList();
     }
 
-    public void deleteApplication(Long id, User user) {
-        Application application = applicationRepository.findById(id).orElseThrow(() -> new NotFoundException("Application not found: " + id));
-//        if (!application.getUser().equals(user))
-//            throw new UnAuthorizedAccessException("User " + user.getUsername() + " is not authorized to delete this application: " + id);
+    public void deleteApplication(Application application) {
         applicationRepository.delete(application);
     }
 }

@@ -77,7 +77,12 @@ public class ApplicationController {
     }
 
     @DeleteMapping
-    public void delete(@RequestParam Long id) {
-        applicationService.deleteApplication(id, null);
+    public void delete(@RequestParam Long id, Principal principal) {
+        String username = principal.getName();
+        Application application = applicationService.getApplicationById(id);
+        if(!application.getUser().getUsername().equals(username)) {
+            throw new ForbiddenException("User " + username + " is not authorized to delete this application: " + id);
+        }
+        applicationService.deleteApplication(application);
     }
 }
